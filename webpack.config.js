@@ -53,7 +53,7 @@ module.exports = {
         use: {
           loader: "url-loader",
           options: {
-            limit: 25000
+            limit: 25000,
           }
         }
       },
@@ -67,9 +67,8 @@ module.exports = {
         exclude: /node_modules/,
         use: getBabelLoader()
       }
-
     ]
-  }
+  },
   devServer: {
     // Display only errors to reduce the amount of output.
     stats: "errors-only",
