@@ -1,0 +1,9 @@
+{
+  "name": "webpack",
+  "version": "1.0.0",
+  "description": "My webpack setup",
+  "main": "src/index.js",
+  "repository": "git@github.com:fanny/webpack.git",
+  "author": "fanny <fanny.vieira@ccc.ufcg.edu.br>",
+  "license": "MIT"
+}
