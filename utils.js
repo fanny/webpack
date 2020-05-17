@@ -1,4 +1,6 @@
-export function getStyleLoaders(cssOptions) {
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+function getStyleLoaders(cssOptions) {
   const isProd = process.env.NODE_ENV === 'production';
   // This is evaluated bottom to top.
   const loaders = [
@@ -9,7 +11,7 @@ export function getStyleLoaders(cssOptions) {
     {
       loader: 'css-loader',
       options: cssOptions,
-    }
+    },
     {
       loader: MiniCssExtractPlugin.loader,
       options: {
@@ -21,7 +23,7 @@ export function getStyleLoaders(cssOptions) {
   return loaders;
 }
 
-export function getBabelLoader() {
+function getBabelLoader() {
   return {
     loader: require.resolve('babel-loader'),
     options: Object.assign({
@@ -29,12 +31,14 @@ export function getBabelLoader() {
       configFile: false,
       compact: true,
       presets: [
-        '@babel/env',
-        {
-          targets: {
-            node: 'current'
+        [
+          '@babel/env',
+          {
+            targets: {
+              node: 'current'
+            }
           }
-        }
+        ]
       ],
       plugins: [
         // Polyfills the runtime needed for async/await, generators, and friends
@@ -46,7 +50,13 @@ export function getBabelLoader() {
             helpers: true,
             regenerator: true,
           }
+        ]
       ]
     })
   }
+}
+
+module.exports = {
+  getStyleLoaders,
+  getBabelLoader
 }

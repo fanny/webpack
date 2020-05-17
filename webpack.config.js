@@ -1,21 +1,25 @@
-const webpack = require('webpack');
-const path = require('path');
-const glob = require('glob');
-const {getStyleLoaders, getBabelLoader} = require('./utils');
-const PurifyCSSPlugin = require('purifycss-webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWepackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const glob = require('glob');
+const path = require('path');
+const webpack = require('webpack');
+
+const {getStyleLoaders, getBabelLoader} = require('./utils');
 
 const CSS_REGEX = /\.css$/;
 const CSS_MODULE_REGEX = /\.module\.css$/;
-const IMAGE_REGEX = /\.(png|jpg)$/;
-const SVG_REGEX =  /\.svg$/;
 const JS_REGEX = /\.js$/;
-const SITEDIR = path.join(__dirname, 'src');
+const IMAGE_REGEX = /\.(png|jpg)$/;
+const NODE_MODULES = /[\\/]node_modules[\\/]/;
+const SVG_REGEX =  /\.svg$/;
 
+
+const SITEDIR = path.join(__dirname, 'src');
 const isProd = process.env.NODE_ENV === 'production';
 
-// TODO: separate confs and add type script
+// TODO: separate confs, add cache loader
+
 module.exports = {
   plugins: [
     new HtmlWepackPlugin({
@@ -28,6 +32,23 @@ module.exports = {
       chunkFilename: isProd ? '[name]_[contenthash:8].css': '[name].css',
     }),
   ],
+  // Inline source maps
+  devtool: isProd ? false : 'cheap-module-eval-source-map',
+  resolve: {
+    extensions: ['.js', '.jsx', '.json']
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          // the usage of `[\\/]` as a path separator for cross-platform compatibility.
+          test: NODE_MODULES,
+          name: 'vendors',
+          chunks: 'all'
+        }
+      }
+    }
+  },
   module: {
     rules: [
       {
@@ -64,7 +85,7 @@ module.exports = {
       {
         test: JS_REGEX,
         include: SITEDIR,
-        exclude: /node_modules/,
+        exclude: NODE_MODULES,
         use: getBabelLoader()
       }
     ]

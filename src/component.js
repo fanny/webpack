@@ -1,4 +1,4 @@
-export default (text = 'Hello World') => {
+export default (text = 'This is my webpack setup') => {
   const element = document.createElement('div');
 
   element.innerHTML = text;
